@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="Td0AFeCkbibBgz9Hkik4dgn40HCD02isF2tsd6AowSY" />
+    <title>OCR Service</title>
+
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/css/freelancer.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <script type="text/javascript" src="./static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
+</head>
+
+<body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>Menu<i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="/">OCR Service</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="/"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="./documentation.html">Documentation</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="./login.html">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <style>
+        .nav-stacked { margin: 10px; font-size: 15px; }
+        .document { padding: 30px; }
+        .code { background-color: #eee; padding: 7px; border-radius: 4px; margin-top: 5px; margin-bottom: 5px;
+            font-family: "Courier New"; font-size: 13px }
+        .param { font-family: "Courier New"; font-size: 14px }
+        .desc { font-size: 14px}
+        .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+            background-color: #18BC9C; color: white; font-weight: bold; border-radius: 4px; }
+
+    </style>
+    <section class="general">
+        <div class="container">
+            <div class="row">
+                <h1>Documentation</h1>
+                <div class="col-sm-3">
+                    <div class="panel panel-default">
+                        <ul id="sidebar" class="nav nav-pills nav-stacked">
+                            <li id="getting_started" class="active"><a href="">Getting Started</a></li>
+                            <li id="binarization"><a href="">Binarization</a></li>
+                            <li id="text_detection"><a href="">Text Detection</a></li>
+                            <li id="perspective_correction"><a href="">Perspective Correction</a></li>
+                            <li id="skew_detection"><a href="">Skew Detection</a></li>
+                            <li id="skew_correction"><a href="">Skew Correction</a></li>
+                            <li id="orientation_detection"><a href="">Orientation Detection</a></li>
+                            <li id="orientation_correction"><a href="">Orientation Correction</a></li>
+                            <li id="edge_detection"><a href="">Edge Detection</a></li>
+                            <li id="page_layout_analysis"><a href="">Page Layout Analysis</a></li>
+                            <li id="get_usage"><a href="">Get Usage</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="panel panel-default">
+                        <div id="_getting_started" class="document">
+                            <strong style="font-size: 24px">Getting Started</strong><br><br>
+                            <div style="font-size: 15px">Welcome to Ocrservice.net API v1.0 documentation! This page
+                            describes how to use Image Pre-Processing services that let you develop client
+                            applications without diving deep into Computer Vision.<br><br>
+                            <strong style="font-size: 16px">Authentication</strong><br>
+                            Services are members only and use this <a href="/signup">link</a> to sign up first.
+                            You will need to provide valid credentials every time you make a request. For this version,
+                            you can use your username and password for authentication.<br><br>
+                            <strong style="font-size: 16px">Request/Response Formats</strong><br>
+                            URL format that contains version number and service name follows as:<br>
+                            <div class="code">http://ocrservice.net/api/[version]/[service_name]</div>
+                            Example:<br>
+                            <div class="code">http://ocrservice.net/api/1.0/text_detection</div>
+                            JSON is used to interact with the server, so set Http header which is
+                            <span class="param">Content-Type</span> and use only POST as method.<br>
+                            <div class="code">
+                            POST /api/1.0/text_detection HTTP/1.1<br>
+                            Host: ocrservice.net<br>
+                            Content-Type: application/json<br>
+                            ...
+                            </div>
+                            Request:<br>
+                            <div class="code">
+                            {<br>
+                                &emsp;&emsp;"username": "your_username",<br>
+                                &emsp;&emsp;"password": "your_password",<br>
+                                &emsp;&emsp;"url": "your_image_url",<br>
+                                &emsp;&emsp;"return_type": "text"<br>
+                            }
+                            </div>
+                            Response:<br>
+                            <div class="code">
+                            {<br>
+                                &emsp;&emsp;"status": "success",<br>
+                                &emsp;&emsp;"unique_id": "1234567890",<br>
+                                &emsp;&emsp;"params":<br>
+                                &emsp;&emsp;&emsp;&emsp;{<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"username": "your_username",<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"return_type": "text",<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"url": "your_image_url"<br>
+                                &emsp;&emsp;&emsp;&emsp;},<br>
+                                &emsp;&emsp;"result": Array<br>
+                            }
+                            </div>
+                            Failed response:<br>
+                            <div class="code">
+                            {<br>
+                                &emsp;&emsp;"status": "failed",<br>
+                                &emsp;&emsp;"unique_id": "1234567890",<br>
+                                &emsp;&emsp;"message": "Invalid credentials provided",<br>
+                                &emsp;&emsp;"params":<br>
+                                &emsp;&emsp;&emsp;&emsp;{<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"username": "your_username",<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"return_type": "text",<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"url": "your_image_url"<br>
+                                &emsp;&emsp;&emsp;&emsp;}<br>
+                            }
+                            </div>
+                            Form posts are not accepted, so build your JSON object. Also, only way to send your image is
+                            via URL. (Multipart uploads are not supported)<br>
+                            Response can include a result array or URL of output image after processing depending on your
+                            <span class="param">return_type</span>.<br>
+                            It will never return anything like raw or Base64 encoded image data.
+                            Output images will be accessible only to with URL without any authentication and they are
+                            stored for at least 1 day. They are deleted permanently after the expiration date.<br><br>
+                            <strong style="font-size: 16px">Rate Limiting</strong><br>
+                            Ocrservice.net has the right to limit number of requests can users make in an hour or day for
+                            fair usage policy. Numbers are not explicitly published yet, but still exists to prevent
+                            abusive use of services.
+                            </div>
+                        </div>
+                        <div id="_binarization" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Binarization</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/binarization</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">thresholding_method</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Thresholding method for binarization algorithm.
+                                        global, otsu, adaptive_mean, adaptive_gaussian values are accepted</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_2.jpg" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    <img src="./media/thumb/test_binarization_2.png" width="200" height="250">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_text_detection" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Text Detection</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/text_detection</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">return_type</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Return type of output. text, image values are accepted</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">detection_algorithm</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Choose detection algorithm between Neumann-Matas and Stroke Width Transform.
+                                            neumann_matas, swt values are accepted</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">result or output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">Choosing text returns points x y width height of rectangles
+                                            detected by algorithm and image returns URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_2.jpg" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    136 376 107 31, 182 127 192 42, 451 468 73 95, 136 377 107 30, 181 126 96 34,
+                                    136 377 107 30, 428 467 96 96, 181 126 193 43, 136 377 107 31, 181 126 193 43,
+                                    206 137 180 31
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_perspective_correction" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Perspective Correction</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/perspective_correction</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_2.jpg" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    <img src="./media/thumb/test_perspective_correction_2.png" width="200" height="250">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_skew_detection" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Skew Detection</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/skew_detection</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">result</span></td>
+                                        <td></td>
+                                        <td><span class="desc">De-skewing angle in radians</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_skew_2.jpg" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    -0.0379
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_skew_correction" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Skew Correction</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/skew_correction</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_skew_2.jpg" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    <img src="./media/thumb/test_skew_correction_2.png" width="200" height="250">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_orientation_detection" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Orientation Detection</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/orientation_detection</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">result</span></td>
+                                        <td></td>
+                                        <td><span class="desc">Rotation angle in degrees</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_orientation_2.jpg" width="250" height="200">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    90
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_orientation_correction" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Orientation Correction</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/orientation_correction</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_orientation_2.jpg" width="250" height="200">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    <img src="./media/thumb/test_orientation_correction_2.png" width="200" height="250">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_edge_detection" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Edge Detection</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/edge_detection</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">return_type</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Return type of output. text, image values are accepted</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">result or output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">Choosing text returns 4 points [x1 y1][x2 y2][x3 y3][x4 y4]
+                                        of a quadrilateral and image returns URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_2.jpg" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    <img src="./media/thumb/test_edge_detection_2.png" width="200" height="250">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_page_layout_analysis" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Page Layout Analysis</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/page_layout_analysis</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">url</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">URL of image to be processed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">return_type</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Return type of output. text, image values are accepted</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">result or output_url</span></td>
+                                        <td></td>
+                                        <td><span class="desc">Choosing text returns points x1 y1 x2 y2 of rectangles and image
+                                        returns URL of output image</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Input</strong><br><br>
+                                    <img src="./media/thumb/test_page_2.png" width="200" height="250">
+                                </div>
+                                <div class="col-md-6 col-md-offset-1">
+                                    <strong>Output</strong><br><br>
+                                    <img src="./media/thumb/test_page_layout_analysis_2.png" width="200" height="250">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="_get_usage" class="document" style="display: none;">
+                            <strong style="font-size: 24px">Get Usage</strong><br><br>
+                            <div style="font-size: 15px">
+
+                            <div class="code">http://ocrservice.net/api/1.0/get_usage</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="param">username</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Username of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="param">password</span></td>
+                                        <td><span class="param">string</span></td>
+                                        <td><span class="param">yes</span></td>
+                                        <td><span class="desc">Password of your account</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Return</strong></td>
+                                        <td><span class="param">result</span></td>
+                                        <td></td>
+                                        <td><span class="desc">Total number of requests made by user</span>
+                                        </td>
+                                    <tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $("#getting_started").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#getting_started").addClass('active');
+            $(".document").hide();
+            $("#_getting_started").show();
+        });
+        $("#binarization").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#binarization").addClass('active');
+            $(".document").hide();
+            $("#_binarization").show();
+        });
+        $("#text_detection").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#text_detection").addClass('active');
+            $(".document").hide();
+            $("#_text_detection").show();
+        });
+        $("#perspective_correction").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#perspective_correction").addClass('active');
+            $(".document").hide();
+            $("#_perspective_correction").show();
+        });
+        $("#skew_detection").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#skew_detection").addClass('active');
+            $(".document").hide();
+            $("#_skew_detection").show();
+        });
+        $("#skew_correction").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#skew_correction").addClass('active');
+            $(".document").hide();
+            $("#_skew_correction").show();
+        });
+        $("#orientation_detection").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#orientation_detection").addClass('active');
+            $(".document").hide();
+            $("#_orientation_detection").show();
+        });
+        $("#orientation_correction").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#orientation_correction").addClass('active');
+            $(".document").hide();
+            $("#_orientation_correction").show();
+        });
+        $("#edge_detection").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#edge_detection").addClass('active');
+            $(".document").hide();
+            $("#_edge_detection").show();
+        });
+        $("#page_layout_analysis").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#page_layout_analysis").addClass('active');
+            $(".document").hide();
+            $("#_page_layout_analysis").show();
+        });
+        $("#get_usage").click(function(e) {
+            e.preventDefault();
+            $(".active").removeClass('active');
+            $("#get_usage").addClass('active');
+            $(".document").hide();
+            $("#_get_usage").show();
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; Ocrservice.net 2016
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="./static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./static/js/freelancer.js"></script>
+
+</body>
+</html>
